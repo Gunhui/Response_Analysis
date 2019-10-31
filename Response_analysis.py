@@ -3,6 +3,7 @@ import win32com.client
 import tkinter as tk
 import requests
 import matplotlib.pyplot as plt
+from PIL import ImageTk, Image
 import matplotlib.figure
 import matplotlib.patches
 
@@ -18,29 +19,37 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from PIL import Image
 
 main = Tk()
 main.title("Comment Analyze")
 main.geometry('640x480+100+100')
+main.resizable(False, False)
+
+filename = "C:\\Users\\GunHee\\PycharmProjects\\data\\research.png"
+img = ImageTk.PhotoImage(Image.open(filename))
+background_label = Label(main, image=img)
+# main.wm_attributes("-alpha", 0.5)
+background_label.place(x=150, y=140)
+
 lbl = Label(main, text="Enter the Keyword")
 lbl.grid(column=0, row=0)
 lbl.config(font=("Courier", 20))
-lbl.place(x=210, y=170)
+lbl.place(x=190, y=140)
 
 
 txt = Entry(main, width=20)
 txt.grid(column=1, row=0)
-txt.place(x=260, y=270)
-txtLb = Label(main, text="Text")
+txt.place(x=280, y=270)
+txtLb = Label(main, text="Text : ")
 txtLb.grid(column=0, row=0)
 txtLb.config(font=("Courier", 10))
 txtLb.place(x=210, y=270)
 
 num = Entry(main, width=10)
 num.grid(column=1, row=0)
-num.place(x=260, y=220)
-numLb = Label(main, text="Page")
+num.place(x=280, y=220)
+numLb = Label(main, text="Page : ")
 numLb.grid(column=0, row=0)
 numLb.config(font=("Courier", 10))
 numLb.place(x=210, y=220)
@@ -63,14 +72,6 @@ def clicked():
     translator = Translator()
 
     browser = webdriver.Chrome('C:\\Users\\GunHee\\PycharmProjects\\data\\chromedriver')
-
-    # excel = win32com.client.Dispatch("Excel.Application")
-    # excel.Visible = True
-    # wb = excel.Workbooks.Add()
-    # ws = wb.Worksheets("Sheet1")
-
-    # ws.Cells(1,1).Value = "기사 제목"
-    # ws.Cells(1,2).Value = "기사 댓글"
 
     def print_sentiment_scores(sentence):
         division = str()
@@ -128,7 +129,6 @@ def clicked():
 
                     feel = print_sentiment_scores(trans.text)
                     news_comment[comment.text] = feel
-                    # ws.Cells(cmt_num, 2).Value = comment.text + feel
                     cmt_num = cmt_num + 1
                     title_num = title_num + 1
                 print()
@@ -189,12 +189,12 @@ def clicked():
     tmp2.grid(column=0, row=0)
     tmp2.place(x=360, y=300)
 
-    Data1 = {'Country': ['Pos', 'Neg', 'Neu'],
+    Data1 = {'感情': ['Pos', 'Neg', 'Neu'],
              'Emotion': [pos, neg, neu]
              }
 
-    df1 = DataFrame(Data1, columns=['Country', 'Emotion'])
-    df1 = df1[['Country', 'Emotion']].groupby('Country').sum()
+    df1 = DataFrame(Data1, columns=['感情', 'Emotion'])
+    df1 = df1[['感情', 'Emotion']].groupby('感情').sum()
 
     figure1 = plt.Figure(figsize=(5, 3.5), dpi=100)
     ax1 = figure1.add_subplot(111)
